@@ -1,0 +1,65 @@
+version: '3.7'
+
+services:
+  user_service:
+    build: ./users
+    command: uvicorn users.main:app --reload --host 0.0.0.0 --port 8000
+    volumes:
+      - ./users/:/api/
+    ports:
+      - 8001:8000
+    environment:
+      - DATABASE_URI=postgresql://postgres:1516@localhost/user_db/user_db_dev
+
+  user_db:
+    image: postgres:12.1-alpine
+    volumes:
+      - postgres_data_user:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1516
+      - POSTGRES_DB=user_db
+
+
+  video_service:
+    build: ./videos
+    command: uvicorn videos.main:app --reload --host 0.0.0.0 --port 8000
+    volumes:
+      - ./videos/:/api/
+    ports:
+      - 8002:8000
+    environment:
+      - DATABASE_URI=postgresql://postgres:1516@localhost/video_db/video_db_dev
+
+  video_db:
+    image: postgres:12.1-alpine
+    volumes:
+      - postgres_data_video:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1516
+      - POSTGRES_DB=user_db
+
+  reaction_service:
+    build: ./reactions
+    command: uvicorn reactions.main:app --reload --host 0.0.0.0 --port 8000
+    volumes:
+      - ./reaction-service/:/api/
+    ports:
+      - 8003:8000
+    environment:
+      - DATABASE_URI=postgresql://postgres:1516@localhost/reaction_db/reaction_db_dev
+
+  user_db:
+    image: postgres:12.1-alpine
+    volumes:
+      - postgres_data_reaction:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1516
+      - POSTGRES_DB=user_db
+
+volumes:
+  postgres_data_user:
+  postgres_data_video:
+  postgres_data_reaction:
