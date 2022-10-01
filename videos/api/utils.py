@@ -6,4 +6,3 @@ def get_video_code(url):
     query = parse_qs(url_data.query)
     code = query["v"][0]
     return code
-
